@@ -53,10 +53,11 @@ prop_replace 'truststoreType'     "PKCS12"                              ${nifi_t
 if [ -n "${NIFI_WEB_HTTP_PORT}" ]; then
     prop_replace 'nifi.web.https.port'                        ''
     prop_replace 'nifi.web.https.host'                        ''
-    prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT}"
+    prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT:-8080}"
     prop_replace 'nifi.web.http.host'                         "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
+    prop_replace 'nifi.remote.input.host'                     "${NIFI_REMOTE_INPUT_HOST:-$HOSTNAME}"
+    prop_replace 'nifi.remote.input.socket.port'              "${NIFI_REMOTE_INPUT_SOCKET_PORT:-10000}"
     prop_replace 'nifi.remote.input.secure'                   'false'
-    prop_replace 'nifi.cluster.protocol.is.secure'            'false'
     prop_replace 'nifi.security.keystore'                     ''
     prop_replace 'nifi.security.keystoreType'                 ''
     prop_replace 'nifi.security.truststore'                   ''
@@ -66,7 +67,7 @@ if [ -n "${NIFI_WEB_HTTP_PORT}" ]; then
     prop_replace 'keystoreType'                               '' ${nifi_toolkit_props_file}
     prop_replace 'truststore'                                 '' ${nifi_toolkit_props_file}
     prop_replace 'truststoreType'                             '' ${nifi_toolkit_props_file}
-    prop_replace 'baseUrl' "http://${NIFI_WEB_HTTP_HOST:-$HOSTNAME}:${NIFI_WEB_HTTP_PORT}" ${nifi_toolkit_props_file}
+    prop_replace 'baseUrl' "http://${NIFI_WEB_HTTP_HOST:-$HOSTNAME}:${NIFI_WEB_HTTP_PORT:-8080}" ${nifi_toolkit_props_file}
 
     if [ -n "${NIFI_WEB_PROXY_HOST}" ]; then
         echo 'NIFI_WEB_PROXY_HOST was set but NiFi is not configured to run in a secure mode. Unsetting nifi.web.proxy.host.'
@@ -79,9 +80,11 @@ else
 fi
 
 prop_replace 'nifi.variable.registry.properties'    "${NIFI_VARIABLE_REGISTRY_PROPERTIES:-}"
+prop_replace 'nifi.cluster.protocol.is.secure'            "${NIFI_CLUSTER_PROTOCOL_IS_SECURE:-false}"
 prop_replace 'nifi.cluster.is.node'                         "${NIFI_CLUSTER_IS_NODE:-false}"
 prop_replace 'nifi.cluster.node.address'                    "${NIFI_CLUSTER_ADDRESS:-$HOSTNAME}"
 prop_replace 'nifi.cluster.node.protocol.port'              "${NIFI_CLUSTER_NODE_PROTOCOL_PORT:-}"
+prop_replace 'nifi.cluster.node.protocol.threads'           "${NIFI_CLUSTER_NODE_PROTOCOL_THREADS:-10}"
 prop_replace 'nifi.cluster.node.protocol.max.threads'       "${NIFI_CLUSTER_NODE_PROTOCOL_MAX_THREADS:-50}"
 prop_replace 'nifi.zookeeper.connect.string'                "${NIFI_ZK_CONNECT_STRING:-}"
 prop_replace 'nifi.zookeeper.root.node'                     "${NIFI_ZK_ROOT_NODE:-/nifi}"
