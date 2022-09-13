@@ -70,12 +70,27 @@ prop_replace 'baseUrl' "https://${NIFI_WEB_HTTPS_HOST:-$HOSTNAME}:${NIFI_WEB_HTT
 prop_replace 'nifi.security.user.authorizer' "${NIFI_SECURITY_USER_AUTHORIZER:-managed-authorizer}"
 prop_replace 'nifi.security.user.login.identity.provider' "${NIFI_SECURITY_USER_LOGIN_IDENTITY_PROVIDER}"
 
-# Establish initial user and an associated admin identity
-sed -i -e 's|<property name="Initial User Identity 1"></property>|<property name="Initial User Identity 1">'"${INITIAL_ADMIN_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml
-sed -i -e 's|<property name="Initial Admin Identity"></property>|<property name="Initial Admin Identity">'"${INITIAL_ADMIN_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml
-
-if [ -n "${NODE_IDENTITY}" ]; then
-    sed -i -e 's|<property name="Node Identity 1"></property>|<property name="Node Identity 1">'"${NODE_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml
+# Satheeshkumar Customizing draco started 
+if [ -z "${NIFI_WEB_PROXY_HOST}" ]; then
+    echo 'NIFI_WEB_PROXY_HOST was not set but NiFi is configured to run in a secure mode. The NiFi UI may be inaccessible if using port mapping or connecting through a proxy.'
+else
+    prop_replace 'nifi.web.proxy.host' "${NIFI_WEB_PROXY_HOST}"
 fi
+
+sed -i -e 's|<property name="Users File">./conf/users.xml</property>|<property name="Users File">'"${NIFI_CERTS_DIR}"'/users.xml</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+sed -i -e 's|<property name="Authorizations File">./conf/authorizations.xml</property>|<property name="Authorizations File">'"${NIFI_CERTS_DIR}"'/authorizations.xml</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+if [ -n "${NODE_IDENTITY}" ]; then 
+    echo " In if " 
+    # Establish initial user and an associated admin identity 
+    sed -i -e 's|<property name="Initial User Identity 1"></property>|<property name="Initial User Identity 1">'"${INITIAL_ADMIN_IDENTITY}"'</property><property name="Initial User Identity 2">'"${NODE_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+else 
+    sed -i -e 's|<property name="Initial User Identity 1"></property>|<property name="Initial User Identity 1">'"${INITIAL_ADMIN_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+fi 
+sed -i -e 's|<property name="Initial Admin Identity"></property>|<property name="Initial Admin Identity">'"${INITIAL_ADMIN_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+
+  
+if [ -n "${NODE_IDENTITY}" ]; then 
+    sed -i -e 's|<property name="Node Identity 1"></property>|<property name="Node Identity 1">'"${NODE_IDENTITY}"'</property>|'  ${NIFI_HOME}/conf/authorizers.xml 
+fi 
 
 prop_replace 'proxiedEntity' "${INITIAL_ADMIN_IDENTITY}" ${nifi_toolkit_props_file}
