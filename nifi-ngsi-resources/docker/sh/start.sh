@@ -47,6 +47,10 @@ prop_replace 'nifi.cluster.protocol.is.secure'  'true'
 "${scripts_dir}/toolkit.sh"
 prop_replace 'baseUrl' "https://${NIFI_WEB_HTTPS_HOST:-$HOSTNAME}:${NIFI_WEB_HTTPS_PORT:-8443}" ${nifi_toolkit_props_file}
 
+if [ -n "${NIFI_CERTS_DIR}" ]; then
+prop_replace 'nifi.flow.configuration.file'         "${NIFI_CERTS_DIR}/flow.xml.gz"
+fi
+
 prop_replace 'keystore'           "${NIFI_HOME}/conf/keystore.p12"      ${nifi_toolkit_props_file}
 prop_replace 'keystoreType'       "PKCS12"                              ${nifi_toolkit_props_file}
 prop_replace 'truststore'         "${NIFI_HOME}/conf/truststore.p12"    ${nifi_toolkit_props_file}
