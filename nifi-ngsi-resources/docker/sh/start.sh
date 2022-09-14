@@ -33,8 +33,8 @@ if [ ! -z "${NIFI_JVM_DEBUGGER}" ]; then
 fi
 
 # Establish baseline properties
-prop_replace 'nifi.web.https.port'              ''
-prop_replace 'nifi.web.https.host'              ''
+prop_replace 'nifi.web.https.port'              "${NIFI_WEB_HTTPS_PORT}"
+prop_replace 'nifi.web.https.host'              "${NIFI_WEB_HTTPS_HOST}"
 prop_replace 'nifi.web.http.port'               "${NIFI_WEB_HTTP_PORT:-8080}"
 prop_replace 'nifi.web.http.host'               "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
 prop_replace 'nifi.web.proxy.host'              "${NIFI_WEB_PROXY_HOST}"
@@ -57,8 +57,8 @@ prop_replace 'truststore'         "${NIFI_HOME}/conf/truststore.p12"    ${nifi_t
 prop_replace 'truststoreType'     "PKCS12"                              ${nifi_toolkit_props_file}
 
 if [ -n "${NIFI_WEB_HTTP_PORT}" ]; then
-    prop_replace 'nifi.web.https.port'                        ''
-    prop_replace 'nifi.web.https.host'                        ''
+    prop_replace 'nifi.web.https.port'                        "${NIFI_WEB_HTTPS_PORT}"
+    prop_replace 'nifi.web.https.host'                        "${NIFI_WEB_HTTPS_HOST}"
     prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT:-8080}"
     prop_replace 'nifi.web.http.host'                         "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
     prop_replace 'nifi.remote.input.host'                     "${NIFI_REMOTE_INPUT_HOST:-$HOSTNAME}"
