@@ -125,10 +125,15 @@ case ${AUTH} in
     ldap)
         echo 'Enabling LDAP user authentication'
         # Reference ldap-provider in properties
-        export NIFI_SECURITY_USER_LOGIN_IDENTITY_PROVIDER="ldap-provider"
+        prop_replace 'nifi.security.user.login.identity.provider' 'ldap-provider'
 
         . "${scripts_dir}/secure.sh"
         . "${scripts_dir}/update_login_providers.sh"
+        ;;
+    *)
+        if [ ! -z "${NIFI_WEB_PROXY_HOST}" ]; then
+            echo 'NIFI_WEB_PROXY_HOST was set but NiFi is not configured to run in a secure mode.  Will not update nifi.web.proxy.host.'
+        fi
         ;;
 esac
 
