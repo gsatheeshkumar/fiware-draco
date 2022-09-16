@@ -33,6 +33,7 @@ prop_replace 'nifi.web.proxy.host'              "${NIFI_WEB_PROXY_HOST}"
 prop_replace 'nifi.remote.input.host'           "${NIFI_REMOTE_INPUT_HOST:-$HOSTNAME}"
 prop_replace 'nifi.remote.input.socket.port'    "${NIFI_REMOTE_INPUT_SOCKET_PORT:-10000}"
 prop_replace 'nifi.remote.input.secure'         "${NIFI_REMOTE_INPUT_SECURE:-true}"
+prop_replace 'nifi.cluster.protocol.is.secure'  "${NIFI_CLUSTER_PROTOCOL_IS_SECURE:-true}"
 
 # Set nifi-toolkit properties files and baseUrl
 "${scripts_dir}/toolkit.sh"
@@ -46,13 +47,14 @@ prop_replace 'truststoreType'     "PKCS12"                              ${nifi_t
 if [ -n "${NIFI_WEB_HTTP_PORT}" ]; then
     prop_replace 'nifi.web.https.port'                        ''
     prop_replace 'nifi.web.https.host'                        ''
-    prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT:-8080}"
+    prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT}"
     prop_replace 'nifi.web.http.host'                         "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
     
     #Satheeshkumar added for ssl Two-way
     prop_replace 'nifi.remote.input.host'           	      "${NIFI_REMOTE_INPUT_HOST:-$HOSTNAME}"
     prop_replace 'nifi.remote.input.socket.port'              "${NIFI_REMOTE_INPUT_SOCKET_PORT:-10000}"
     prop_replace 'nifi.remote.input.secure'                   "${NIFI_REMOTE_INPUT_SECURE:-false}"
+    prop_replace 'nifi.cluster.protocol.is.secure'            "${NIFI_CLUSTER_PROTOCOL_IS_SECURE:-false}"
     
     prop_replace 'nifi.security.keystore'                     ''
     prop_replace 'nifi.security.keystoreType'                 ''
@@ -81,7 +83,6 @@ if [ -n "${NIFI_CERTS_DIR}" ]; then
 fi
 
 prop_replace 'nifi.variable.registry.properties'    "${NIFI_VARIABLE_REGISTRY_PROPERTIES:-}"
-prop_replace 'nifi.cluster.protocol.is.secure'              "${NIFI_CLUSTER_PROTOCOL_IS_SECURE:-false}"
 prop_replace 'nifi.cluster.is.node'                         "${NIFI_CLUSTER_IS_NODE:-false}"
 prop_replace 'nifi.cluster.node.address'                    "${NIFI_CLUSTER_ADDRESS:-$HOSTNAME}"
 prop_replace 'nifi.cluster.node.protocol.port'              "${NIFI_CLUSTER_NODE_PROTOCOL_PORT:-}"
