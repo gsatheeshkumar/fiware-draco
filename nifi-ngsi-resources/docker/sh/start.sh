@@ -15,7 +15,8 @@ scripts_dir='/opt/nifi/scripts'
 [ -f "${scripts_dir}/common.sh" ] && . "${scripts_dir}/common.sh"
 # Override JVM memory settings
 if [ ! -z "${NIFI_JVM_HEAP_INIT}" ]; then
-    prop_replace 'java.arg.2'       "-Xms${NIFI_JVM_HEAP_INIT}" ${nifi_bootstrap_file}fi
+    prop_replace 'java.arg.2'       "-Xms${NIFI_JVM_HEAP_INIT}" ${nifi_bootstrap_file}
+fi
 
 if [ ! -z "${NIFI_JVM_HEAP_MAX}" ]; then
     prop_replace 'java.arg.3'       "-Xmx${NIFI_JVM_HEAP_MAX}" ${nifi_bootstrap_file}
@@ -49,7 +50,7 @@ if [ -n "${NIFI_WEB_HTTP_PORT}" ]; then
     prop_replace 'nifi.web.http.port'                         "${NIFI_WEB_HTTP_PORT}"
     prop_replace 'nifi.web.http.host'                         "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
     prop_replace 'nifi.remote.input.secure'                   'false'
-    prop_replace 'nifi.cluster.protocol.is.secure'            'false'
+    prop_replace 'nifi.cluster.protocol.is.secure'            "${NIFI_CLUSTER_PROTOCOL_IS_SECURE:-false}"
     prop_replace 'nifi.security.keystore'                     ''
     prop_replace 'nifi.security.keystoreType'                 ''
     prop_replace 'nifi.security.truststore'                   ''
